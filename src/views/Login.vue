@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :model="LoginForm" ref="form" class="loginContainer">
+    <el-form :model="LoginForm" ref="LoginForm" :rules="rules" class="loginContainer">
       <h3 class="loginTitle">系统登录</h3>
       <el-form-item label="用户名" prop="username">
         <el-input
@@ -29,7 +29,9 @@
         <img :src="captchaUrl" />
       </el-form-item>
       <el-checkbox v-model="checked" class="loginRemember">记住我</el-checkbox>
-      <el-button type="primary" style="width: 100%">登录</el-button>
+      <el-button type="primary" style="width: 100%" @click="submitLogin()"
+        >登录</el-button
+      >
     </el-form>
   </div>
 </template>
@@ -46,11 +48,43 @@ export default {
         verifycode: "",
       },
       checked: true,
+      rules: {
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          {
+            min: 3,
+            max: 15,
+            message: "用户名长度在3到15个字符",
+            trigger: "blur",
+          },
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            min: 3,
+            max: 15,
+            message: "密码长度在3到15个字符",
+            trigger: "blur",
+          },
+        ],
+        verifycode: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+      },
     };
   },
   props: {},
   created() {},
-  methods: {},
+  methods: {
+    submitLogin() {
+      this.$refs.LoginForm.validate((valid) => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          this.$message.error("请输入所有必填字段！");
+          return false;
+        }
+      });
+    },
+  },
 };
 </script>
 
